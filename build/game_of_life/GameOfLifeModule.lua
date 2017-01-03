@@ -74,23 +74,23 @@ function GameOfLifeModule.getCellState(i, j, grid)
 end
 
 function GameOfLifeModule.nextStep()
-    local tempGrid = deepcopy(GameOfLifeModule.grid)
+    local tempGrid = copyByValue(GameOfLifeModule.grid)
     for i = 1, GameOfLifeModule.CELL_WIDTH_AMOUNT do
         for j = 1, GameOfLifeModule.CELL_HEIGHT_AMOUNT do
             GameOfLifeModule.updateCell(i, j, tempGrid)
         end
     end
-    GameOfLifeModule.grid = tempGrid;
+    GameOfLifeModule.grid = copyByValue(tempGrid);
 end
 
 function GameOfLifeModule.updateCell(i, j, grid)
-    if GameOfLifeModule.getCellState(i, j, grid) == 0 and GameOfLifeModule.countCellNeighbours(i, j, grid) == 3 then
+    if GameOfLifeModule.getCellState(i, j, grid) == 0 and GameOfLifeModule.countCellNeighbours(i, j) == 3 then
         GameOfLifeModule.changeState(i, j, grid)
-    elseif GameOfLifeModule.getCellState(i, j, grid) == 1 and GameOfLifeModule.countCellNeighbours(i, j, grid) > 1 and GameOfLifeModule.countCellNeighbours(i, j, grid) < 4 then
+    elseif GameOfLifeModule.getCellState(i, j, grid) == 1 and GameOfLifeModule.countCellNeighbours(i, j) > 1 and GameOfLifeModule.countCellNeighbours(i, j) < 4 then
         -- do nothing
-    elseif GameOfLifeModule.getCellState(i, j, grid) == 1 and GameOfLifeModule.countCellNeighbours(i, j, grid) < 2 then
+    elseif GameOfLifeModule.getCellState(i, j, grid) == 1 and GameOfLifeModule.countCellNeighbours(i, j) < 2 then
         GameOfLifeModule.changeState(i, j, grid)
-    elseif GameOfLifeModule.getCellState(i, j, grid) == 1 and GameOfLifeModule.countCellNeighbours(i, j, grid) > 3 then
+    elseif GameOfLifeModule.getCellState(i, j, grid) == 1 and GameOfLifeModule.countCellNeighbours(i, j) > 3 then
         GameOfLifeModule.changeState(i, j, grid)
     end
 end
@@ -103,32 +103,28 @@ function GameOfLifeModule.changeState(i, j, grid)
     end
 end
 
-function GameOfLifeModule.countCellNeighbours(i, j, grid)
+function GameOfLifeModule.countCellNeighbours(i, j)
     local neighbours = 0
 
-    neighbours = neighbours + GameOfLifeModule.getCellState(i-1, j-1, grid);
-    neighbours = neighbours + GameOfLifeModule.getCellState(i, j-1, grid);
-    neighbours = neighbours + GameOfLifeModule.getCellState(i+1, j-1, grid);
-    neighbours = neighbours + GameOfLifeModule.getCellState(i+1, j, grid);
-    neighbours = neighbours + GameOfLifeModule.getCellState(i+1, j+1, grid);
-    neighbours = neighbours + GameOfLifeModule.getCellState(i, j+1, grid);
-    neighbours = neighbours + GameOfLifeModule.getCellState(i-1, j+1, grid);
-    neighbours = neighbours + GameOfLifeModule.getCellState(i-1, j, grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i-1, j-1, GameOfLifeModule.grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i, j-1, GameOfLifeModule.grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i+1, j-1, GameOfLifeModule.grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i+1, j, GameOfLifeModule.grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i+1, j+1, GameOfLifeModule.grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i, j+1, GameOfLifeModule.grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i-1, j+1, GameOfLifeModule.grid);
+    neighbours = neighbours + GameOfLifeModule.getCellState(i-1, j, GameOfLifeModule.grid);
 
     return neighbours
 end
 
-function deepcopy(orig)
-    local orig_type = type(orig)
-    local copy
-    if orig_type == 'table' then
-        copy = {}
-        for orig_key, orig_value in next, orig, nil do
-            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+function copyByValue(array)
+    local copy = {}
+    for i = 1, GameOfLifeModule.CELL_WIDTH_AMOUNT do
+        copy[i] = {}
+        for j = 1, GameOfLifeModule.CELL_HEIGHT_AMOUNT do
+            copy[i][j] = array[i][j]
         end
-        setmetatable(copy, deepcopy(getmetatable(orig)))
-    else -- number, string, boolean, etc
-    copy = orig
     end
     return copy
 end
