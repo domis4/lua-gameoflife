@@ -40,27 +40,27 @@ end
 
 function GameOfLifeModule.switchState(x, y)
     local index = GameOfLifeModule.getIndexFromXY(x, y)
-    if index[0] <= GameOfLifeModule.CELL_WIDTH_AMOUNT and index[1] <= GameOfLifeModule.CELL_HEIGHT_AMOUNT and index[0] >= 1 and index[1] >= 1then
-        if GameOfLifeModule.grid[index[0]][index[1]] == 0 then
-            GameOfLifeModule.grid[index[0]][index[1]] = 1
+    if index[1] <= GameOfLifeModule.CELL_WIDTH_AMOUNT and index[2] <= GameOfLifeModule.CELL_HEIGHT_AMOUNT and index[1] >= 1 and index[2] >= 1then
+        if GameOfLifeModule.grid[index[1]][index[2]] == 0 then
+            GameOfLifeModule.grid[index[1]][index[2]] = 1
         else
-            GameOfLifeModule.grid[index[0]][index[1]] = 0
+            GameOfLifeModule.grid[index[1]][index[2]] = 0
         end
     end
 end
 
 function GameOfLifeModule.getIndexFromXY(x, y)
     local index = {}
-    index[0] = math.floor(x / GameOfLifeModule.CELL_WIDTH)
-    index[1] = math.floor(y / GameOfLifeModule.CELL_HEIGHT)
+    index[1] = math.floor(x / GameOfLifeModule.CELL_WIDTH)
+    index[2] = math.floor(y / GameOfLifeModule.CELL_HEIGHT)
     return index
 end
 
 
 function GameOfLifeModule.getCellState(i, j, grid)
-    local cellState = 0
+    local cellstate = 0
     if i < 1 then
-        cellState = 0
+        cellstate = 0
     elseif j < 1 then
         cellstate = 0
     elseif i > GameOfLifeModule.CELL_WIDTH_AMOUNT then
